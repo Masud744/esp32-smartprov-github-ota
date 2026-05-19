@@ -1,29 +1,35 @@
-#include <Arduino.h>
-
-#include "config/app_config.h"
-#include "managers/provision/provision_manager.h"
-#include "managers/sensor/dht_manager.h"
-#include "managers/version/version_manager.h"
-#include "managers/ota/ota_manager.h"
+#include "app_config.h"
+#include "provision_manager.h"
+#include "dht_manager.h"
+#include "version_manager.h"
+#include "ota_manager.h"
 
 void setup()
 {
 
-    Serial.begin(SERIAL_BAUD);
+   Serial.begin(SERIAL_BAUD);
 
-    delay(1000);
+   delay(1000);
 
-    VersionManager::print();
+   VersionManager::print();
 
-    ProvisionManager::begin();
-    DHTManager::begin();
-    OTAManager::begin();
+   ProvisionManager::begin();
+   DHTManager::begin();
+   OTAManager::begin();
+
+   Serial.println();
+   Serial.println("==================================");
+   Serial.println("FATAL ERROR: SIMULATED CRASH!!!");
+   Serial.println("Rebooting in 3 seconds...");
+   Serial.println("==================================");
+   delay(3000);
+   ESP.restart();
 }
 
 void loop()
 {
 
-    ProvisionManager::update();
-    DHTManager::update();
-    OTAManager::update();
+   ProvisionManager::update();
+   DHTManager::update();
+   OTAManager::update();
 }

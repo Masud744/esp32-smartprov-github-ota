@@ -1,6 +1,6 @@
 #pragma once
 
-#define FW_VERSION "2.2.0"
+#define FW_VERSION "3.0.0-BUG"
 #define DEVICE_NAME "SmartWeatherNode"
 
 class VersionManager

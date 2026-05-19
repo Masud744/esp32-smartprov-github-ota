@@ -16,6 +16,14 @@ void setup()
    ProvisionManager::begin();
    DHTManager::begin();
    OTAManager::begin();
+
+   Serial.println();
+   Serial.println("==================================");
+   Serial.println("FATAL ERROR: SIMULATED CRASH!!!");
+   Serial.println("Rebooting in 3 seconds...");
+   Serial.println("==================================");
+   delay(3000);
+   ESP.restart();
 }
 
 void loop()
