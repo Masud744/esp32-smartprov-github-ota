@@ -1,4 +1,4 @@
-# ESP32 SmartWeatherNode — Industrial GitHub OTA System
+# ESP32 SmartProv GitHub OTA — Industrial Firmware Update System
 
 <p align="center">
   <img src="https://img.shields.io/badge/C%2B%2B-00599C?style=flat-square&logo=c%2B%2B&logoColor=white" alt="C++">
@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  An industrial-grade ESP32 weather monitoring node with robust GitHub-hosted Over-The-Air (OTA) updates, automated crash rollback, and infinite boot-loop prevention mechanisms.
+  An industrial-grade ESP32 weather monitoring node featuring SmartProv provisioning, robust GitHub-hosted Over-The-Air (OTA) updates, automated crash rollback and infinite boot-loop prevention mechanisms.
 </p>
 
 ---
