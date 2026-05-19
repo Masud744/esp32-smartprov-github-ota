@@ -1,11 +1,11 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
-#include <HTTPUpdate.h>
+#include <Update.h>
 #include <ArduinoJson.h>
 
 #include "ota_manager.h"
-#include "../version/version_manager.h"
+#include "version_manager.h"
 
 #define VERSION_URL "https://raw.githubusercontent.com/Masud744/esp32-smartprov-github-ota/main/firmware/latest/version.json"
 
@@ -81,40 +81,49 @@ void OTAManager::update()
 
     WiFiClient client;
 
-    httpUpdate.onProgress([](
-                              int cur,
-                              int total)
-                          {
-                              int percent = (cur * 100) / total;
+    http.begin(firmwareURL);
 
-                              Serial.print("Progress: ");
+    int fw_code = http.GET();
 
-                              Serial.print(percent);
-
-                              Serial.println("%"); });
-
-    t_httpUpdate_return result =
-        httpUpdate.update(
-            client,
-            firmwareURL);
-
-    switch (result)
+    if (fw_code != HTTP_CODE_OK)
     {
-        (
-            "UPDATE FAILED: ");
-        Serial.println(
-            httpUpdate.getLastErrorString():
-
-        Serial.println(
-            "UPDATE FAILED");
-
-        break;
-
-    case HTTP_UPDATE_OK:
-
-        Serial.println(
-            "UPDATE SUCCESS");
-
-        break;
+        Serial.println("Firmware download failed");
+        http.end();
+        return;
     }
+
+    int len = http.getSize();
+
+    bool ok = Update.begin(len);
+
+    if (!ok)
+    {
+        Serial.println("Not enough OTA space");
+        http.end();
+        return;
+    }
+
+    WiFiClient *stream = http.getStreamPtr();
+
+    size_t written = Update.writeStream(*stream);
+
+    if (written == len)
+    {
+        Serial.println("OTA written");
+    }
+    else
+    {
+        Serial.println("OTA partial");
+    }
+
+    if (Update.end())
+    {
+        if (Update.isFinished())
+        {
+            Serial.println("UPDATE SUCCESS");
+            ESP.restart();
+        }
+    }
+
+    http.end();
 }
