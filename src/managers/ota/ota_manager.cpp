@@ -6,13 +6,15 @@
 #include <Preferences.h>
 
 #include "ota_manager.h"
-#include "../version/version_manager.h"
+#include "version_manager.h"
 
 #define VERSION_URL "https://raw.githubusercontent.com/Masud744/esp32-smartprov-github-ota/main/firmware/latest/version.json"
 
 Preferences otaPrefs;
 bool otaRunning = false;
 int retryCount = 0;
+bool update_pending = false;
+int boot_fails = 0;
 #define MAX_OTA_RETRY 3
 
 unsigned long lastCheck = 0;
@@ -21,15 +23,50 @@ void OTAManager::begin()
 {
     otaPrefs.begin("ota", false);
     retryCount = otaPrefs.getInt("retry", 0);
+    update_pending = otaPrefs.getBool("update_pending", false);
+    boot_fails = otaPrefs.getInt("boot_fails", 0);
 
     Serial.println();
     Serial.println("[OTA] Ready");
     Serial.print("Retry Count: ");
     Serial.println(retryCount);
+
+    if (update_pending)
+    {
+        boot_fails++;
+        otaPrefs.putInt("boot_fails", boot_fails);
+        Serial.printf("[OTA] Update Pending! Boot fail count: %d\n", boot_fails);
+
+        if (boot_fails >= 3)
+        {
+            Serial.println("[OTA] SYSTEM UNSTABLE! Initiating Rollback...");
+            if (Update.canRollBack())
+            {
+                Update.rollBack();
+                otaPrefs.putBool("update_pending", false);
+                otaPrefs.putInt("boot_fails", 0);
+                Serial.println("[OTA] Rollback successful. Rebooting into old firmware...");
+                delay(1000);
+                ESP.restart();
+            }
+            else
+            {
+                Serial.println("[OTA] Rollback failed! No partition available.");
+            }
+        }
+    }
 }
 
 void OTAManager::update()
 {
+    if (update_pending && WiFi.status() == WL_CONNECTED)
+    {
+        Serial.println("[OTA] Firmware Boot OK! Validating new version...");
+        otaPrefs.putBool("update_pending", false);
+        otaPrefs.putInt("boot_fails", 0);
+        update_pending = false;
+    }
+
     if (millis() - lastCheck < 10000)
         return;
 
@@ -135,6 +172,9 @@ void OTAManager::update()
         if (Update.isFinished())
         {
             Serial.println("UPDATE SUCCESS");
+            otaPrefs.putString("last_good_version", FW_VERSION);
+            otaPrefs.putBool("update_pending", true);
+            otaPrefs.putInt("boot_fails", 0);
             otaPrefs.putInt("retry", 0);
             ESP.restart();
         }
