@@ -1,5 +1,5 @@
 {
    "version":"1.0.0",
-   "firmware":"firmware/releases/v1.0.0/firmware.bin",
-   "notes":"Initial temperature release"
+
+   "url":"https://raw.githubusercontent.com/Masud744/esp32-smartprov-github-ota/main/firmware/releases/v1.0.0/firmware.bin"
 }

@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include <HTTPUpdate.h>
 #include <ArduinoJson.h>
 
 #include "ota_manager.h"
@@ -14,14 +15,13 @@ void OTAManager::begin()
 {
 
     Serial.println();
-
     Serial.println("[OTA] Ready");
 }
 
 void OTAManager::update()
 {
 
-    if (millis() - lastCheck < 30000)
+    if (millis() - lastCheck < 10000)
         return;
 
     lastCheck = millis();
@@ -30,7 +30,6 @@ void OTAManager::update()
         return;
 
     Serial.println();
-
     Serial.println("[OTA] Checking...");
 
     HTTPClient http;
@@ -41,8 +40,6 @@ void OTAManager::update()
 
     if (code != 200)
     {
-
-        Serial.println("[OTA] Request Failed");
 
         http.end();
 
@@ -58,27 +55,62 @@ void OTAManager::update()
     deserializeJson(doc, payload);
 
     String remote = doc["version"];
+    String firmwareURL = doc["url"];
 
     Serial.print("Current: ");
-
     Serial.println(FW_VERSION);
 
     Serial.print("Remote: ");
-
     Serial.println(remote);
 
-    if (remote != FW_VERSION)
+    if (remote == FW_VERSION)
     {
-
-        Serial.println();
-
-        Serial.println("UPDATE AVAILABLE");
-    }
-    else
-    {
-
-        Serial.println();
 
         Serial.println("UP TO DATE");
+
+        return;
+    }
+
+    Serial.println();
+    Serial.println("UPDATE AVAILABLE");
+
+    Serial.println("[OTA] Downloading...");
+
+    WiFiClient client;
+
+    httpUpdate.onProgress([](
+                              int cur,
+                              int total)
+                          {
+                              int percent = (cur * 100) / total;
+
+                              Serial.print("Progress: ");
+
+                              Serial.print(percent);
+
+                              Serial.println("%");
+                          });
+
+    t_httpUpdate_return result =
+        httpUpdate.update(
+            client,
+            firmwareURL);
+
+    switch (result)
+    {
+
+    case HTTP_UPDATE_FAILED:
+
+        Serial.println(
+            "UPDATE FAILED");
+
+        break;
+
+    case HTTP_UPDATE_OK:
+
+        Serial.println(
+            "UPDATE SUCCESS");
+
+        break;
     }
 }
