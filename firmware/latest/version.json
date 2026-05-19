@@ -1,5 +1,4 @@
 {
-   "version":"3.0.0",
-
-   "url":"https://raw.githubusercontent.com/Masud744/esp32-smartprov-github-ota/main/wrong.bin"
+   "version":"2.1.0",
+   "url":"https://raw.githubusercontent.com/Masud744/esp32-smartprov-github-ota/main/firmware/releases/v2.1.0/firmware.bin"
 }

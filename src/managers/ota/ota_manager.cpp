@@ -20,6 +20,7 @@ unsigned long lastCheck = 0;
 void OTAManager::begin()
 {
     otaPrefs.begin("ota", false);
+    otaPrefs.clear();
     retryCount = otaPrefs.getInt("retry", 0);
 
     Serial.println();
