@@ -4,6 +4,7 @@
 #include "managers/provision/provision_manager.h"
 #include "managers/sensor/dht_manager.h"
 #include "managers/version/version_manager.h"
+#include "managers/ota/ota_manager.h"
 
 void setup()
 {
@@ -16,6 +17,7 @@ void setup()
 
     ProvisionManager::begin();
     DHTManager::begin();
+    OTAManager::begin();
 }
 
 void loop()
@@ -23,4 +25,5 @@ void loop()
 
     ProvisionManager::update();
     DHTManager::update();
+    OTAManager::update();
 }
