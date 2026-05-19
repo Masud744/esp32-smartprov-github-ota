@@ -186,4 +186,40 @@ Change `version.json` to point to an older release URL. The ESP32 will see that 
 
 ---
 
-> Built with ❤️ by Masud744 to make IoT deployments unbreakable.
+## Author
+
+Shahriar Alom Masud  
+Web Application Developer | IoT & Robotics Engineer  
+B.Sc. Engg. in IoT & Robotics Engineering  
+University of Frontier Technology, Bangladesh
+
+Email: shahriar0002@std.uftb.ac.bd
+
+LinkedIn: https://www.linkedin.com/in/shahriar-alom-masud
+
+GitHub: https://github.com/Masud744
+
+WhatsApp: https://wa.me/8801740071118
+
+YouTube: https://www.youtube.com/@ShahriarAlomMasud
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## Acknowledgments
+
+- Espressif Systems — ESP32 Platform
+- Arduino Framework — Embedded Development
+- SmartProv — WiFi Provisioning
+- GitHub Releases — OTA Hosting
+- ArduinoJson — Metadata Parsing
+- DHT Sensor Library — Environment Monitoring
+
+---
+
+If you found this project useful, consider giving it a star on GitHub!
