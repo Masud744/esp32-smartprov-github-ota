@@ -42,6 +42,8 @@ Instead of relying on an expensive custom cloud backend, this system uses a free
 
 ## System Architecture
 
+![System Architecture Diagram](Images/System_Arc.png)
+
 **Data & Update Flow:**
 
 1. ESP32 boots up and initializes `SmartProv` for WiFi configuration.
@@ -80,27 +82,41 @@ Instead of relying on an expensive custom cloud backend, this system uses a free
 ```text
 esp32-smartprov-github-ota/
 │
+├── Images/                         # Project Documentation Images
+│   └── System_Arc.png              # Architecture Diagram
+│
 ├── firmware/                       # Hosted Firmware Files for OTA
 │   ├── latest/
 │   │   └── version.json            # ESP32 checks this file to find updates
-│   └── releases/
+│   └── releases/                   # All firmware binary releases
+│       ├── v1.0.0/
 │       ├── v2.1.0/
-│       │   └── firmware.bin
-│       └── v2.2.0/
-│           └── firmware.bin        # Target binaries referenced by version.json
+│       ├── v2.2.0/                 # Stable Rollback Supported Framework
+│       └── v3.0.0-BUG/             # Used for testing Failsafe Rollbacks
 │
-├── smart_weather_node_v1/          # Arduino IDE Compatible Directory
-│   ├── smart_weather_node_v1.ino   # Main loop
+├── smart_weather_node_v1/          # Primary Arduino IDE Structure
+│   ├── app_config.h
+│   ├── dht_manager.cpp/h
 │   ├── ota_manager.cpp/h           # OTA Logic and Rollback rules
 │   ├── provision_manager.cpp/h     # SmartProv functionality
-│   └── version_manager.h           # Current FW_VERSION definition
+│   ├── version_manager.cpp/h       # Firmware version & names
+│   └── smart_weather_node_v1.ino   # Main application loop
+│
+├── smart_weather_node_v1_temp_only/# V1 Version (Temp Only) - Manual Flash Test
+│   └── smart_weather_node_v1_temp_only.ino
 │
 ├── src/                            # PlatformIO / VSCode Structure
 │   ├── main.cpp
 │   ├── config/                     # Pinouts and App settings
 │   └── managers/                   # Synced modular classes
+│       ├── logger/
+│       ├── ota/
+│       ├── provision/
+│       ├── sensor/
+│       └── version/
 │
-└── README.md
+├── CHANGELOG.md                    # Detailed version history
+└── README.md                       # Project documentation
 ```
 
 ---
@@ -189,19 +205,10 @@ Change `version.json` to point to an older release URL. The ESP32 will see that 
 ## Author
 
 Shahriar Alom Masud  
-Web Application Developer | IoT & Robotics Engineer  
 B.Sc. Engg. in IoT & Robotics Engineering  
-University of Frontier Technology, Bangladesh
-
-Email: shahriar0002@std.uftb.ac.bd
-
+University of Frontier Technology, Bangladesh  
+Email: shahriar0002@std.uftb.ac.bd  
 LinkedIn: https://www.linkedin.com/in/shahriar-alom-masud
-
-GitHub: https://github.com/Masud744
-
-WhatsApp: https://wa.me/8801740071118
-
-YouTube: https://www.youtube.com/@ShahriarAlomMasud
 
 ---
 
