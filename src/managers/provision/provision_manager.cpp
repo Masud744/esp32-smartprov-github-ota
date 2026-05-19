@@ -2,7 +2,7 @@
 #include <SmartProv.h>
 
 #include "provision_manager.h"
-#include "../../config/version.h"
+#include "../version/version_manager.h"
 
 SmartProv prov;
 
@@ -29,8 +29,7 @@ void ProvisionManager::begin()
                          Serial.println(prov.getRSSI());
 
                          Serial.print("Firmware: ");
-                         Serial.println(FW_VERSION);
-                     });
+                         Serial.println(FW_VERSION); });
 
     prov.begin();
 }
