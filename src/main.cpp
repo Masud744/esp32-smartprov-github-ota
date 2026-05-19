@@ -2,6 +2,7 @@
 
 #include "config/app_config.h"
 #include "managers/provision/provision_manager.h"
+#include "managers/sensor/dht_manager.h"
 
 void setup()
 {
@@ -11,10 +12,12 @@ void setup()
     delay(1000);
 
     ProvisionManager::begin();
+    DHTManager::begin();
 }
 
 void loop()
 {
 
     ProvisionManager::update();
+    DHTManager::update();
 }
