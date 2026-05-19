@@ -2,7 +2,7 @@
 #include <DHT.h>
 
 #include "dht_manager.h"
-#include "../../config/app_config.h"
+#include "app_config.h"
 
 DHT dht(DHT_PIN, DHT_TYPE);
 
@@ -26,8 +26,9 @@ void DHTManager::update()
     lastRead = millis();
 
     float temp = dht.readTemperature();
+    float hum = dht.readHumidity();
 
-    if (isnan(temp))
+    if (isnan(temp) || isnan(hum))
     {
 
         Serial.println("[DHT] Read Failed");
@@ -41,5 +42,11 @@ void DHTManager::update()
 
     Serial.print(temp);
 
-    Serial.println(" C");
+    Serial.print(" C ");
+
+    Serial.print("Hum: ");
+
+    Serial.print(hum);
+
+    Serial.println("%");
 }
