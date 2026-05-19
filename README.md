@@ -42,7 +42,7 @@ Instead of relying on an expensive custom cloud backend, this system uses a free
 
 ## System Architecture
 
-![System Architecture Diagram](Images/System_Arc.png)
+![System Architecture Diagram](images/System_Arc.png)
 
 **Data & Update Flow:**
 
