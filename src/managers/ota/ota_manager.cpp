@@ -74,6 +74,9 @@ void OTAManager::update()
     Serial.println();
     Serial.println("UPDATE AVAILABLE");
 
+    Serial.print("Firmware URL: ");
+    Serial.println(firmwareURL);
+
     Serial.println("[OTA] Downloading...");
 
     WiFiClient client;
@@ -88,8 +91,7 @@ void OTAManager::update()
 
                               Serial.print(percent);
 
-                              Serial.println("%");
-                          });
+                              Serial.println("%"); });
 
     t_httpUpdate_return result =
         httpUpdate.update(
@@ -98,8 +100,10 @@ void OTAManager::update()
 
     switch (result)
     {
-
-    case HTTP_UPDATE_FAILED:
+        (
+            "UPDATE FAILED: ");
+        Serial.println(
+            httpUpdate.getLastErrorString():
 
         Serial.println(
             "UPDATE FAILED");
