@@ -42,6 +42,7 @@ void OTAManager::begin()
             Serial.println("[OTA] SYSTEM UNSTABLE! Initiating Rollback...");
             if (Update.canRollBack())
             {
+                otaPrefs.putString("rejected_version", FW_VERSION); // Save the buggy version
                 Update.rollBack();
                 otaPrefs.putBool("update_pending", false);
                 otaPrefs.putInt("boot_fails", 0);
@@ -96,6 +97,15 @@ void OTAManager::update()
 
     String remote = doc["version"];
     String firmwareURL = doc["url"];
+
+    String rejected = otaPrefs.getString("rejected_version", "");
+    if (remote == rejected)
+    {
+        Serial.print("[OTA] Update Blocked: Version ");
+        Serial.print(rejected);
+        Serial.println(" was previously rejected due to crash!");
+        return;
+    }
 
     Serial.print("Current: ");
     Serial.println(FW_VERSION);
